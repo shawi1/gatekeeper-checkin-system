@@ -1,0 +1,26 @@
+# Requirements: Infrastructure setup for local PostgreSQL database
+# Purpose: Provide persistent database for development and testing
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: gatekeeper-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gatekeeper
+      POSTGRES_PASSWORD: gatekeeper_dev_password
+      POSTGRES_DB: gatekeeper_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gatekeeper"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local

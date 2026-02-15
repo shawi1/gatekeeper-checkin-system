@@ -1,0 +1,32 @@
+{
+  "name": "gatekeeper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Event check-in system with QR code tickets and real-time validation",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "seed": "node scripts/seed-demo-data.js",
+    "db:migrate": "cd packages/database && npx prisma migrate dev",
+    "db:generate": "cd packages/database && npx prisma generate",
+    "db:studio": "cd packages/database && npx prisma studio",
+    "generate-keys": "node scripts/generate-keypair.js",
+    "setup": "npm install && npm run generate-keys && npm run db:migrate && npm run seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.4.0",
+    "bcrypt": "^6.0.0"
+  }
+}

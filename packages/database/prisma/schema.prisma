@@ -1,0 +1,123 @@
+// Requirements: FR-01 through FR-13, NFR-01, NFR-03
+// Purpose: Core data model for GateKeeper event check-in system
+// Links: See docs/requirements-traceability.md
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Requirement: FR-01 - User authentication and account management
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name")
+  role         UserRole @default(ATTENDEE)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  tickets          Ticket[]
+  organizedEvents  Event[]       @relation("EventOrganizer")
+  transactions     Transaction[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ATTENDEE
+  ORGANIZER
+  ADMIN
+}
+
+// Requirements: FR-01, FR-02, FR-13 - Event management with public/private settings
+model Event {
+  id          String    @id @default(uuid())
+  title       String
+  description String?   @db.Text
+  dateTime    DateTime  @map("date_time")
+  location    String
+  price       Decimal   @default(0) @db.Decimal(10, 2) // FR-02: Paid vs free events
+  capacity    Int       @default(100)
+  isPrivate   Boolean   @default(false) @map("is_private") // FR-13: Private events
+  inviteToken String?   @unique @map("invite_token") // FR-13.1: Invite link token
+  imageUrl    String?   @map("image_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  organizerId String @map("organizer_id")
+  organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id])
+
+  tickets      Ticket[]
+  transactions Transaction[]
+
+  @@index([dateTime])
+  @@index([isPrivate])
+  @@map("events")
+}
+
+// Requirements: FR-03, FR-05, FR-10 - JWT tickets with status tracking and duplicate prevention
+model Ticket {
+  id          String       @id @default(uuid())
+  jwtToken    String?      @map("jwt_token") @db.Text // FR-03: JWT-based QR code
+  status      TicketStatus @default(REGISTERED) // FR-05: Status tracking
+  nonce       String?      @unique // NFR-03: Anti-counterfeiting nonce
+  checkInTime DateTime?    @map("check_in_time") // FR-10: Track check-in timestamp
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  userId  String @map("user_id")
+  eventId String @map("event_id")
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  // FR-10: Prevent duplicate registrations - one ticket per user per event
+  @@unique([userId, eventId])
+  @@index([nonce]) // NFR-01: Fast nonce lookup for validation
+  @@index([status])
+  @@map("tickets")
+}
+
+// FR-05: Ticket status lifecycle
+enum TicketStatus {
+  REGISTERED  // Successfully registered for event
+  WAITLISTED  // Event at capacity, on waitlist
+  CHECKED_IN  // Successfully checked in at event
+  CANCELLED   // Registration cancelled
+}
+
+// Requirement: FR-02 - Payment processing for paid events
+model Transaction {
+  id               String            @id @default(uuid())
+  amount           Decimal           @db.Decimal(10, 2)
+  paymentMethod    String            @map("payment_method")
+  status           TransactionStatus @default(PENDING)
+  stripePaymentId  String?           @unique @map("stripe_payment_id")
+  stripeCustomerId String?           @map("stripe_customer_id")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  userId  String @map("user_id")
+  eventId String @map("event_id")
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@index([stripePaymentId])
+  @@map("transactions")
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}

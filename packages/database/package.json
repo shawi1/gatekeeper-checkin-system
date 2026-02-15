@@ -1,0 +1,22 @@
+{
+  "name": "@gatekeeper/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "echo 'Database package - use npm run db:migrate from root'",
+    "build": "tsc",
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate",
+    "studio": "prisma studio",
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.7.0",
+    "typescript": "^5.3.0",
+    "ts-node": "^10.9.2"
+  }
+}
