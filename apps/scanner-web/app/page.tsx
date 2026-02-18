@@ -81,7 +81,16 @@ export default function ScannerPage() {
 
   // Requirement: FR-07 - Continuous QR code scanning
   const tick = () => {
-    if (!scanning || !videoRef.current || !canvasRef.current) {
+    if (!scanning) {
+      console.log('Tick stopped: scanning is false');
+      return;
+    }
+    if (!videoRef.current) {
+      console.log('Tick stopped: videoRef is null');
+      return;
+    }
+    if (!canvasRef.current) {
+      console.log('Tick stopped: canvasRef is null');
       return;
     }
 
@@ -89,7 +98,14 @@ export default function ScannerPage() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    if (!ctx || video.readyState !== video.HAVE_ENOUGH_DATA) {
+    if (!ctx) {
+      console.log('Tick waiting: no canvas context');
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+      console.log('Tick waiting: video not ready, readyState =', video.readyState);
       requestAnimationFrame(tick);
       return;
     }
