@@ -19,6 +19,7 @@ export default function ScannerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scanning, setScanning] = useState(false);
+  const scanningRef = useRef(false);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<string>('');
   const [events, setEvents] = useState<any[]>([]);
@@ -60,6 +61,7 @@ export default function ScannerPage() {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
         setScanning(true);
+        scanningRef.current = true;
         setError('');
         console.log('Camera started, beginning QR scan loop...');
         requestAnimationFrame(tick);
@@ -77,11 +79,12 @@ export default function ScannerPage() {
       videoRef.current.srcObject = null;
     }
     setScanning(false);
+    scanningRef.current = false;
   };
 
   // Requirement: FR-07 - Continuous QR code scanning
   const tick = () => {
-    if (!scanning) {
+    if (!scanningRef.current) {
       console.log('Tick stopped: scanning is false');
       return;
     }
@@ -136,7 +139,7 @@ export default function ScannerPage() {
     }
 
     // Continue scanning
-    if (scanning) {
+    if (scanningRef.current) {
       requestAnimationFrame(tick);
     }
   };
