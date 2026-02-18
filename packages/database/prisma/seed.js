@@ -119,15 +119,32 @@ async function main() {
     },
   });
 
+  // Event 5: Demo event for class presentation
+  const demoDate = new Date(now);
+  demoDate.setDate(demoDate.getDate() + 3); // 3 days from now
+  const event5 = await prisma.event.create({
+    data: {
+      title: 'Mobile App Development Bootcamp',
+      description: 'Learn to build iOS and Android apps from scratch. Hands-on coding sessions with experienced developers.',
+      dateTime: demoDate,
+      location: 'Tech Campus, Building A, Room 201',
+      price: 0,
+      capacity: 40,
+      isPrivate: false,
+      organizerId: organizer.id,
+    },
+  });
+
   console.log('✓ Events created');
   console.log(`  Event 1: ${event1.title}`);
   console.log(`  Event 2: ${event2.title}`);
   console.log(`  Event 3: ${event3.title} (Private - Token: ${inviteToken})`);
-  console.log(`  Event 4: ${event4.title}\n`);
+  console.log(`  Event 4: ${event4.title}`);
+  console.log(`  Event 5: ${event5.title} (Demo Event)\n`);
 
   console.log('✓ Database Summary:');
   console.log('  Users: 2 (1 organizer, 1 attendee)');
-  console.log('  Events: 4 (3 public, 1 private)');
+  console.log('  Events: 5 (4 public, 1 private)');
   console.log('\n✓ Demo data seeded successfully!\n');
 }
 
