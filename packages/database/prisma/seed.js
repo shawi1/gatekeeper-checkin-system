@@ -10,6 +10,12 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding demo data...\n');
 
+  // Clean up existing data
+  console.log('Cleaning up existing data...');
+  await prisma.ticket.deleteMany({});
+  await prisma.event.deleteMany({});
+  console.log('✓ Cleanup complete\n');
+
   // Create demo users
   console.log('Creating demo users...');
 
