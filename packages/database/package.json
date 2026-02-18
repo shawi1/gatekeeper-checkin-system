@@ -4,7 +4,7 @@
   "private": true,
   "main": "./src/index.ts",
   "prisma": {
-    "seed": "node --loader ts-node/esm prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   },
   "scripts": {
     "dev": "echo 'Database package - use npm run db:migrate from root'",

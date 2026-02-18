@@ -1,9 +1,9 @@
 // Requirements: Demo data generation for testing and demonstration
 // Purpose: Create sample users, events, and tickets for quick setup
 
-import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-import { randomBytes } from 'crypto';
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
+const { randomBytes } = require('crypto');
 
 const prisma = new PrismaClient();
 
