@@ -99,9 +99,12 @@ export default function ScannerPage() {
 
     // Get image data and scan for QR code
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: "dontInvert",
+    });
 
     if (code) {
+      console.log('QR Code detected:', code.data);
       // QR code detected! Validate it
       validateTicket(code.data);
       // Don't continue scanning while showing feedback
