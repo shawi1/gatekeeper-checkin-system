@@ -39,7 +39,7 @@ export default function HomePage() {
 
       const data = await response.json();
       setEvents(data);
-    } catch (err) {
+    } catch (err: any) {
       setError('Failed to load events. Please try again later.');
       console.error(err);
     } finally {

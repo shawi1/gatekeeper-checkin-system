@@ -29,11 +29,14 @@ export class JWTService {
 
   constructor(privateKeyPath?: string, publicKeyPath?: string) {
     const rootDir = process.cwd();
-    const defaultPrivateKeyPath = path.join(rootDir, 'keys', 'private.pem');
-    const defaultPublicKeyPath = path.join(rootDir, 'keys', 'public.pem');
+    const defaultPrivateKeyPath = path.join(rootDir, '..', '..', 'keys', 'private.pem');
+    const defaultPublicKeyPath = path.join(rootDir, '..', '..', 'keys', 'public.pem');
 
-    this.privateKey = readFileSync(privateKeyPath || defaultPrivateKeyPath);
-    this.publicKey = readFileSync(publicKeyPath || defaultPublicKeyPath);
+    const privatePath = privateKeyPath || process.env.JWT_PRIVATE_KEY_PATH || defaultPrivateKeyPath;
+    const publicPath = publicKeyPath || process.env.JWT_PUBLIC_KEY_PATH || defaultPublicKeyPath;
+
+    this.privateKey = readFileSync(privatePath);
+    this.publicKey = readFileSync(publicPath);
   }
 
   /**
