@@ -6,7 +6,7 @@ const { generateKeyPairSync } = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔐 Generating RS256 keypair for JWT ticket signing...\n');
+console.log(' Generating RS256 keypair for JWT ticket signing...\n');
 
 // Generate 2048-bit RSA keypair
 const { publicKey, privateKey } = generateKeyPairSync('rsa', {
@@ -35,16 +35,16 @@ fs.writeFileSync(privateKeyPath, privateKey, { mode: 0o600 });
 const publicKeyPath = path.join(keysDir, 'public.pem');
 fs.writeFileSync(publicKeyPath, publicKey);
 
-console.log('✅ Keypair generated successfully!');
+console.log(' Keypair generated successfully!');
 console.log(`   Private key: ${privateKeyPath}`);
 console.log(`   Public key: ${publicKeyPath}\n`);
 
-console.log('⚠️  SECURITY WARNING:');
+console.log('WARNING:  SECURITY WARNING:');
 console.log('   - NEVER commit private.pem to version control');
 console.log('   - The keys/ directory is already in .gitignore');
 console.log('   - Private key has restrictive permissions (600)\n');
 
-console.log('📝 Next steps:');
+console.log(' Next steps:');
 console.log('   1. Copy .env.example to .env');
 console.log('   2. Run: npm run db:migrate');
 console.log('   3. Run: npm run seed');

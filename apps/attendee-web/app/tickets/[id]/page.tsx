@@ -159,7 +159,7 @@ export default function TicketPage({ params }: { params: { id: string } }) {
             {ticket.checkInTime && (
               <div style={{ marginTop: '2rem', padding: '1rem', background: '#d5f4e6', borderRadius: '8px' }}>
                 <p style={{ color: '#27ae60', fontWeight: 'bold' }}>
-                  ✓ Checked in at {new Date(ticket.checkInTime).toLocaleString()}
+                  Checked in at {new Date(ticket.checkInTime).toLocaleString()}
                 </p>
               </div>
             )}

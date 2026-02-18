@@ -19,7 +19,7 @@ export default function RootLayout({
       <body>
         <nav className="navbar">
           <div className="nav-container">
-            <a href="/" className="nav-brand">🎫 GateKeeper</a>
+            <a href="/" className="nav-brand">GateKeeper</a>
             <div className="nav-links">
               <a href="/">Events</a>
               <a href="/tickets">My Tickets</a>

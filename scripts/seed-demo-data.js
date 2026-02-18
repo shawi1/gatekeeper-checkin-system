@@ -18,7 +18,7 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  console.log('🌱 Seeding demo data...\n');
+  console.log(' Seeding demo data...\n');
 
   // Create demo users
   console.log('Creating demo users...');
@@ -48,7 +48,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Users created');
+  console.log(' Users created');
   console.log(`   Organizer: organizer@example.com / password123`);
   console.log(`   Attendee: attendee@example.com / password123\n`);
 
@@ -123,7 +123,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Events created');
+  console.log(' Events created');
   console.log(`   Event 1: ${event1.title}`);
   console.log(`   Event 2: ${event2.title}`);
   console.log(`   Event 3: ${event3.title} (Private - Token: ${inviteToken})`);
@@ -145,21 +145,21 @@ async function main() {
     },
   });
 
-  console.log('✅ Sample ticket created for demo attendee\n');
+  console.log(' Sample ticket created for demo attendee\n');
 
-  console.log('📊 Database Summary:');
+  console.log(' Database Summary:');
   console.log(`   Users: 2 (1 organizer, 1 attendee)`);
   console.log(`   Events: 4 (3 public, 1 private)`);
   console.log(`   Tickets: 1\n`);
 
-  console.log('🎉 Demo data seeded successfully!\n');
-  console.log('📝 Quick Start:');
+  console.log(' Demo data seeded successfully!\n');
+  console.log(' Quick Start:');
   console.log('   1. Start the API: cd apps/api && npm run dev');
   console.log('   2. Start attendee app: cd apps/attendee-web && npm run dev');
   console.log('   3. Start scanner app: cd apps/scanner-web && npm run dev');
   console.log('   4. Login as organizer@example.com or attendee@example.com\n');
 
-  console.log(`🔗 Private Event Invite Link:`);
+  console.log(` Private Event Invite Link:`);
   console.log(`   http://localhost:3000/events/private/${inviteToken}\n`);
 }
 

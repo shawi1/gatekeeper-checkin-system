@@ -164,7 +164,7 @@ router.post('/validate', async (req: Request, res: Response) => {
     console.log(`[Scanner] Successful check-in - Latency: ${latency}ms`);
 
     if (latency > 1000) {
-      console.warn(`[Scanner] ⚠️  Latency exceeded 1 second: ${latency}ms`);
+      console.warn(`[Scanner] WARNING: Latency exceeded 1 second: ${latency}ms`);
     }
 
     // FR-08: Green success feedback

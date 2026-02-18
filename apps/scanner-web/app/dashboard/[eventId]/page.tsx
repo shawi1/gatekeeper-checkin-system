@@ -79,7 +79,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
           <h2 style={{ color: '#95a5a6', fontSize: '1.3rem' }}>{stats.eventTitle}</h2>
         </div>
         <button onClick={fetchStats} className="btn btn-primary">
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
@@ -91,14 +91,12 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
       <div className="dashboard-grid">
         {/* Total Registered */}
         <div className="stat-card">
-          <div className="stat-icon">👥</div>
           <div className="stat-value">{stats.totalRegistered}</div>
           <div className="stat-label">Registered</div>
         </div>
 
         {/* Total Checked In */}
         <div className="stat-card">
-          <div className="stat-icon">✓</div>
           <div className="stat-value" style={{ color: '#27ae60' }}>
             {stats.totalCheckedIn}
           </div>
@@ -107,7 +105,6 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
 
         {/* Waitlisted */}
         <div className="stat-card">
-          <div className="stat-icon">⏳</div>
           <div className="stat-value" style={{ color: '#f39c12' }}>
             {stats.totalWaitlisted}
           </div>
@@ -116,7 +113,6 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
 
         {/* Check-in Rate */}
         <div className="stat-card">
-          <div className="stat-icon">📊</div>
           <div className="stat-value" style={{ color: '#3498db' }}>
             {stats.checkInRate}%
           </div>
@@ -153,10 +149,10 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
       {/* Quick Actions */}
       <div style={{ marginTop: '3rem', textAlign: 'center' }}>
         <a href="/" className="btn btn-primary" style={{ marginRight: '1rem' }}>
-          📱 Back to Scanner
+          Back to Scanner
         </a>
         <button onClick={fetchStats} className="btn btn-secondary">
-          🔄 Manual Refresh
+          Manual Refresh
         </button>
       </div>
 

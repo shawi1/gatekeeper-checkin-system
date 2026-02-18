@@ -224,11 +224,11 @@ export default function ScannerPage() {
         <div style={{ marginTop: '2rem', textAlign: 'center' }}>
           {!scanning ? (
             <button onClick={startScanning} className="btn btn-primary" style={{ fontSize: '1.2rem', padding: '1rem 2rem' }}>
-              📷 Start Scanning
+              Start Scanning
             </button>
           ) : (
             <button onClick={stopScanning} className="btn btn-secondary" style={{ fontSize: '1.2rem', padding: '1rem 2rem' }}>
-              ⏹️ Stop Scanning
+              Stop Scanning
             </button>
           )}
         </div>
@@ -236,7 +236,7 @@ export default function ScannerPage() {
         {selectedEventId && (
           <div style={{ marginTop: '2rem', textAlign: 'center' }}>
             <a href={`/dashboard/${selectedEventId}`} className="btn btn-primary">
-              📊 View Dashboard
+              View Dashboard
             </a>
           </div>
         )}
@@ -247,8 +247,8 @@ export default function ScannerPage() {
         <div className={`validation-overlay ${validationResult.color}`}>
           <div className="validation-icon">
             {validationResult.color === 'green' && '✓'}
-            {validationResult.color === 'yellow' && '⚠️'}
-            {validationResult.color === 'red' && '✗'}
+            {validationResult.color === 'yellow' && '!'}
+            {validationResult.color === 'red' && 'X'}
           </div>
           <div className="validation-message">
             {validationResult.message}
