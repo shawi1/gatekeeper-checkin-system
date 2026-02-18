@@ -50,9 +50,10 @@ export default function ScannerPage() {
         return;
       }
 
+      console.log('Starting camera...');
       // Request camera access (FR-06)
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
       });
 
       if (videoRef.current) {
@@ -60,6 +61,7 @@ export default function ScannerPage() {
         videoRef.current.play();
         setScanning(true);
         setError('');
+        console.log('Camera started, beginning QR scan loop...');
         requestAnimationFrame(tick);
       }
     } catch (err) {
@@ -99,12 +101,18 @@ export default function ScannerPage() {
 
     // Get image data and scan for QR code
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    // Debug: Log every 60 frames (~1 second)
+    if (Math.random() < 0.016) {
+      console.log('Scanning... Video size:', video.videoWidth, 'x', video.videoHeight);
+    }
+
     const code = jsQR(imageData.data, imageData.width, imageData.height, {
       inversionAttempts: "dontInvert",
     });
 
     if (code) {
-      console.log('QR Code detected:', code.data);
+      console.log('✅ QR Code detected:', code.data.substring(0, 50) + '...');
       // QR code detected! Validate it
       validateTicket(code.data);
       // Don't continue scanning while showing feedback
