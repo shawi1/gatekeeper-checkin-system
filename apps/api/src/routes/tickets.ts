@@ -71,7 +71,7 @@ router.post('/register', authenticate, async (req: AuthRequest, res: Response) =
     const status = ticketCount >= event.capacity ? 'WAITLISTED' : 'REGISTERED';
 
     // FR-02: Handle paid vs free events
-    const requiresPayment = event.price > 0;
+    const requiresPayment = Number(event.price) > 0;
 
     if (requiresPayment) {
       // For demo purposes, simplified Stripe integration
