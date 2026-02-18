@@ -50,7 +50,7 @@ router.get('/public', async (req: Request, res: Response) => {
     });
 
     // Add availability info
-    const eventsWithAvailability = events.map(event => ({
+    const eventsWithAvailability = events.map((event: any) => ({
       ...event,
       ticketsSold: event._count.tickets,
       spotsAvailable: event.capacity - event._count.tickets,
@@ -249,7 +249,7 @@ router.get('/organizer/my-events', authenticate, async (req: AuthRequest, res: R
       },
     });
 
-    const eventsWithStats = events.map(event => ({
+    const eventsWithStats = events.map((event: any) => ({
       ...event,
       ticketsSold: event._count.tickets,
       spotsAvailable: event.capacity - event._count.tickets,
