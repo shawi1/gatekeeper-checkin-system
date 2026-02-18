@@ -51,7 +51,6 @@ export default function ScannerPage() {
         return;
       }
 
-      console.log('Starting camera...');
       // Request camera access (FR-06)
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -63,7 +62,6 @@ export default function ScannerPage() {
         setScanning(true);
         scanningRef.current = true;
         setError('');
-        console.log('Camera started, beginning QR scan loop...');
         requestAnimationFrame(tick);
       }
     } catch (err) {
@@ -84,31 +82,15 @@ export default function ScannerPage() {
 
   // Requirement: FR-07 - Continuous QR code scanning
   const tick = () => {
-    if (!scanningRef.current) {
-      console.log('Tick stopped: scanning is false');
-      return;
-    }
-    if (!videoRef.current) {
-      console.log('Tick stopped: videoRef is null');
-      return;
-    }
-    if (!canvasRef.current) {
-      console.log('Tick stopped: canvasRef is null');
+    if (!scanningRef.current || !videoRef.current || !canvasRef.current) {
       return;
     }
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-    if (!ctx) {
-      console.log('Tick waiting: no canvas context');
-      requestAnimationFrame(tick);
-      return;
-    }
-
-    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
-      console.log('Tick waiting: video not ready, readyState =', video.readyState);
+    if (!ctx || video.readyState !== video.HAVE_ENOUGH_DATA) {
       requestAnimationFrame(tick);
       return;
     }
@@ -120,18 +102,11 @@ export default function ScannerPage() {
 
     // Get image data and scan for QR code
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    // Debug: Log every 60 frames (~1 second)
-    if (Math.random() < 0.016) {
-      console.log('Scanning... Video size:', video.videoWidth, 'x', video.videoHeight);
-    }
-
     const code = jsQR(imageData.data, imageData.width, imageData.height, {
       inversionAttempts: "dontInvert",
     });
 
     if (code) {
-      console.log('✅ QR Code detected:', code.data.substring(0, 50) + '...');
       // QR code detected! Validate it
       validateTicket(code.data);
       // Don't continue scanning while showing feedback
