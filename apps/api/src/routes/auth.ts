@@ -98,6 +98,11 @@ router.post('/login', async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    // OAuth users don't have a password
+    if (!user.passwordHash) {
+      return res.status(401).json({ error: 'Please sign in with Google' });
+    }
+
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 

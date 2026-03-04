@@ -5,6 +5,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { getJWTService } from '@gatekeeper/jwt-core';
 
+// Augment Express.User so Passport's type augmentation aligns with our user shape
+declare global {
+  namespace Express {
+    interface User {
+      id: string;
+      email: string;
+      role: string;
+    }
+  }
+}
+
 export interface AuthRequest extends Request {
   user?: {
     id: string;
