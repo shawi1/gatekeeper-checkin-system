@@ -4,6 +4,7 @@
 
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import passport from 'passport';
 import { prisma } from '@gatekeeper/database';
 import { getJWTService } from '@gatekeeper/jwt-core';
 import { RegisterInput, LoginInput } from '@gatekeeper/shared-types';
@@ -123,5 +124,42 @@ router.post('/login', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Login failed' });
   }
 });
+
+/**
+ * Initiate Google OAuth flow
+ *
+ * GET /api/auth/google
+ */
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email'],
+}));
+
+/**
+ * Google OAuth callback
+ *
+ * GET /api/auth/google/callback
+ */
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/auth?error=oauth_failed' }),
+  async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+
+      if (!user) {
+        return res.redirect(`${process.env.NEXT_PUBLIC_ATTENDEE_URL}/auth?error=no_user`);
+      }
+
+      // Generate JWT token
+      const token = jwtService.generateAccessToken(user.id, user.email, user.role);
+
+      // Redirect to frontend with token
+      const redirectUrl = `${process.env.NEXT_PUBLIC_ATTENDEE_URL}/auth/callback?token=${token}`;
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('Google OAuth callback error:', error);
+      res.redirect(`${process.env.NEXT_PUBLIC_ATTENDEE_URL}/auth?error=callback_failed`);
+    }
+  }
+);
 
 export default router;

@@ -194,9 +194,9 @@ export default function ScannerPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>QR Code Scanner</h1>
-        <p style={{ color: '#95a5a6' }}>Scan tickets for check-in</p>
+      <div className="page-header">
+        <h1 className="page-title">QR Code Scanner</h1>
+        <p className="page-subtitle">Scan tickets for instant check-in validation</p>
       </div>
 
       {error && (
@@ -204,7 +204,11 @@ export default function ScannerPage() {
       )}
 
       <div className="event-selector">
-        <label htmlFor="event-select">Select Event:</label>
+        <label htmlFor="event-select">
+          <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            Active Event
+          </span>
+        </label>
         <select
           id="event-select"
           value={selectedEventId}
@@ -222,27 +226,38 @@ export default function ScannerPage() {
       <div className="scanner-container">
         <div className="video-container">
           <video ref={videoRef} className="scanner-video" playsInline />
-          <div className="scanner-overlay"></div>
+          {scanning && <div className="scanner-overlay"></div>}
           <canvas ref={canvasRef} className="scanner-canvas" />
         </div>
 
-        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+        <div style={{ marginTop: '2.5rem', textAlign: 'center', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           {!scanning ? (
-            <button onClick={startScanning} className="btn btn-primary" style={{ fontSize: '1.2rem', padding: '1rem 2rem' }}>
-              Start Scanning
+            <button onClick={startScanning} className="btn btn-primary" style={{ minWidth: '200px' }}>
+              🎯 Start Scanning
             </button>
           ) : (
-            <button onClick={stopScanning} className="btn btn-secondary" style={{ fontSize: '1.2rem', padding: '1rem 2rem' }}>
-              Stop Scanning
+            <button onClick={stopScanning} className="btn btn-secondary" style={{ minWidth: '200px' }}>
+              ⏹ Stop Scanning
             </button>
+          )}
+
+          {selectedEventId && (
+            <a href={`/dashboard/${selectedEventId}`} className="btn btn-secondary" style={{ minWidth: '200px' }}>
+              📊 View Dashboard
+            </a>
           )}
         </div>
 
-        {selectedEventId && (
-          <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-            <a href={`/dashboard/${selectedEventId}`} className="btn btn-primary">
-              View Dashboard
-            </a>
+        {scanning && (
+          <div style={{
+            marginTop: '2rem',
+            textAlign: 'center',
+            color: 'rgba(255, 255, 255, 0.6)',
+            fontSize: '0.9rem',
+            animation: 'fadeIn 0.6s ease'
+          }}>
+            <p>Position the QR code within the frame</p>
+            <p style={{ marginTop: '0.5rem', color: 'var(--primary)' }}>● Scanning active...</p>
           </div>
         )}
       </div>
@@ -252,12 +267,22 @@ export default function ScannerPage() {
         <div className={`validation-overlay ${validationResult.color}`}>
           <div className="validation-icon">
             {validationResult.color === 'green' && '✓'}
-            {validationResult.color === 'yellow' && '!'}
-            {validationResult.color === 'red' && 'X'}
+            {validationResult.color === 'yellow' && '⚠'}
+            {validationResult.color === 'red' && '✗'}
           </div>
           <div className="validation-message">
             {validationResult.message}
           </div>
+          {validationResult.reason && (
+            <div style={{
+              fontSize: '1.2rem',
+              marginTop: '1rem',
+              opacity: 0.9,
+              animation: 'slideUp 0.5s ease 0.3s both'
+            }}>
+              {validationResult.reason}
+            </div>
+          )}
         </div>
       )}
     </div>

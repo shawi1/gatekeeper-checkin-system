@@ -4,6 +4,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -15,9 +16,11 @@ datasource db {
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
-  passwordHash String   @map("password_hash")
+  passwordHash String?  @map("password_hash") // Optional for OAuth users
   fullName     String   @map("full_name")
   role         UserRole @default(ATTENDEE)
+  googleId     String?  @unique @map("google_id") // Google OAuth ID
+  avatarUrl    String?  @map("avatar_url") // Profile picture URL
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

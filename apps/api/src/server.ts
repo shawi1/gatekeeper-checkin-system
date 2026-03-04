@@ -6,8 +6,11 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import session from 'express-session';
+import passport from 'passport';
 import { prisma } from '@gatekeeper/database';
 import { getJWTService } from '@gatekeeper/jwt-core';
+import { initializePassport } from './config/passport';
 
 // Load environment variables
 dotenv.config();
@@ -25,6 +28,23 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+
+// Session configuration for OAuth
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'dev_session_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  },
+}));
+
+// Initialize Passport for OAuth
+app.use(passport.initialize());
+app.use(passport.session());
+initializePassport();
 
 // Initialize JWT service
 const jwtService = getJWTService();
