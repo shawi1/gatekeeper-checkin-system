@@ -8,6 +8,7 @@ import passport from 'passport';
 import { prisma } from '@gatekeeper/database';
 import { getJWTService } from '@gatekeeper/jwt-core';
 import { RegisterInput, LoginInput } from '@gatekeeper/shared-types';
+import { authenticate, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 const jwtService = getJWTService();
@@ -127,6 +128,38 @@ router.post('/login', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+/**
+ * Get current authenticated user
+ *
+ * GET /api/auth/me
+ * Requirement: FR-01 - User authentication
+ */
+router.get('/me', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user!.id },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        avatarUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Failed to fetch user' });
   }
 });
 
