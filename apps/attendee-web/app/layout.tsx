@@ -41,17 +41,7 @@ export default function RootLayout({
               {user ? (
                 <>
                   <span style={{ color: '#95a5a6' }}>Hello, {user.fullName}</span>
-                  <button
-                    onClick={handleLogout}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'white',
-                      cursor: 'pointer',
-                      textDecoration: 'underline',
-                      fontSize: '1rem'
-                    }}
-                  >
+                  <button onClick={handleLogout}>
                     Logout
                   </button>
                 </>
