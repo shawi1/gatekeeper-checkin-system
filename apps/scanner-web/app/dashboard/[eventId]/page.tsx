@@ -1,7 +1,7 @@
 // Requirement: FR-09 - Real-time attendance statistics
 // Purpose: Display live event statistics and check-in rates
 // Links: See docs/requirements-traceability.md section 3.1.9
-// ⭐ KEY DEMO FILE
+// KEY DEMO FILE
 
 'use client';
 
@@ -96,12 +96,12 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
           className="btn btn-primary"
           style={{ minWidth: '150px' }}
         >
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
       <div className="info-message" style={{ marginBottom: '2rem' }}>
-        <span>🕐</span>
+        <span>Updated</span>
         <span>Last updated: {formatLastUpdated(stats.lastUpdated)} • Auto-refreshes every 5 seconds</span>
       </div>
 
@@ -109,7 +109,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
       <div className="dashboard-grid">
         {/* Total Registered */}
         <div className="stat-card">
-          <div className="stat-label" style={{ marginBottom: '1rem', fontSize: '0.95rem' }}>📋 Registered</div>
+          <div className="stat-label" style={{ marginBottom: '1rem', fontSize: '0.95rem' }}>Registered</div>
           <div className="stat-value">{stats.totalRegistered}</div>
         </div>
 
@@ -123,7 +123,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
 
         {/* Waitlisted */}
         <div className="stat-card">
-          <div className="stat-label" style={{ marginBottom: '1rem', fontSize: '0.95rem' }}>⏳ Waitlisted</div>
+          <div className="stat-label" style={{ marginBottom: '1rem', fontSize: '0.95rem' }}>Waitlisted</div>
           <div className="stat-value" style={{
             background: 'linear-gradient(135deg, var(--warning) 0%, #d97706 100%)',
             WebkitBackgroundClip: 'text',
@@ -136,7 +136,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
 
         {/* Check-in Rate */}
         <div className="stat-card">
-          <div className="stat-label" style={{ marginBottom: '1rem', fontSize: '0.95rem' }}>📊 Check-in Rate</div>
+          <div className="stat-label" style={{ marginBottom: '1rem', fontSize: '0.95rem' }}>Check-in Rate</div>
           <div className="stat-value">
             {stats.checkInRate}%
           </div>
@@ -158,7 +158,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
           fontWeight: 700,
           color: 'rgba(255, 255, 255, 0.9)'
         }}>
-          🏢 Venue Capacity
+          Venue Capacity
         </h3>
         <div style={{
           display: 'flex',
@@ -200,7 +200,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
             fontSize: '0.9rem',
             fontWeight: 600
           }}>
-            ⚠️ Event is nearing capacity
+            Warning: Event is nearing capacity
           </div>
         )}
       </div>
@@ -218,7 +218,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
           ← Back to Scanner
         </a>
         <button onClick={fetchStats} className="btn btn-secondary" style={{ minWidth: '180px' }}>
-          🔄 Manual Refresh
+          Manual Refresh
         </button>
       </div>
 
@@ -237,7 +237,7 @@ export default function DashboardPage({ params }: { params: { eventId: string } 
           fontWeight: 700,
           color: 'rgba(255, 255, 255, 0.9)'
         }}>
-          📈 Detailed Summary
+          Detailed Summary
         </h3>
         <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
           <li style={{

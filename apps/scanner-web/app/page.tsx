@@ -1,7 +1,7 @@
 // Requirements: FR-06, FR-07, FR-08 - Scanner with camera, validation, feedback
 // Purpose: QR code scanner with real-time validation and color-coded feedback
 // Links: See docs/requirements-traceability.md sections 3.1.6, 3.1.7, 3.1.8
-// ⭐ KEY DEMO FILE
+// KEY DEMO FILE
 
 'use client';
 
@@ -233,17 +233,17 @@ export default function ScannerPage() {
         <div style={{ marginTop: '2.5rem', textAlign: 'center', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           {!scanning ? (
             <button onClick={startScanning} className="btn btn-primary" style={{ minWidth: '200px' }}>
-              🎯 Start Scanning
+              Start Scanning
             </button>
           ) : (
             <button onClick={stopScanning} className="btn btn-secondary" style={{ minWidth: '200px' }}>
-              ⏹ Stop Scanning
+              Stop Scanning
             </button>
           )}
 
           {selectedEventId && (
             <a href={`/dashboard/${selectedEventId}`} className="btn btn-secondary" style={{ minWidth: '200px' }}>
-              📊 View Dashboard
+              View Dashboard
             </a>
           )}
         </div>
@@ -267,7 +267,7 @@ export default function ScannerPage() {
         <div className={`validation-overlay ${validationResult.color}`}>
           <div className="validation-icon">
             {validationResult.color === 'green' && '✓'}
-            {validationResult.color === 'yellow' && '⚠'}
+            {validationResult.color === 'yellow' && '!'}
             {validationResult.color === 'red' && '✗'}
           </div>
           <div className="validation-message">
