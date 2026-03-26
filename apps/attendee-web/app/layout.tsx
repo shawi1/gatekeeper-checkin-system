@@ -38,6 +38,7 @@ export default function RootLayout({
             <div className="nav-links">
               <a href="/">Events</a>
               {user && <a href="/tickets">My Tickets</a>}
+              {user && <a href="/events/create">Host an Event</a>}
               {user ? (
                 <>
                   <span style={{ color: '#95a5a6' }}>Hello, {user.fullName}</span>

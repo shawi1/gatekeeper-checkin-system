@@ -295,4 +295,44 @@ router.get('/recent-checkins/:eventId', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * Validate scanner token and return event info
+ *
+ * GET /api/scanner/event-by-token/:scannerToken
+ *
+ * Used by the scanner app to authenticate and lock itself to a specific event.
+ * Returns event details if the token is valid.
+ */
+router.get('/event-by-token/:scannerToken', async (req: Request, res: Response) => {
+  try {
+    const { scannerToken } = req.params;
+
+    const event = await prisma.event.findUnique({
+      where: { scannerToken },
+      select: {
+        id: true,
+        title: true,
+        dateTime: true,
+        location: true,
+        capacity: true,
+        organizer: {
+          select: {
+            id: true,
+            fullName: true,
+          },
+        },
+      },
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: 'Invalid scanner token' });
+    }
+
+    res.json(event);
+  } catch (error) {
+    console.error('Error validating scanner token:', error);
+    res.status(500).json({ error: 'Failed to validate scanner token' });
+  }
+});
+
 export default router;
