@@ -6,6 +6,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import jsQR from 'jsqr';
 
 interface ValidationResult {
@@ -24,10 +25,37 @@ export default function ScannerPage() {
   const [selectedEventId, setSelectedEventId] = useState<string>('');
   const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState('');
+  const [lockedEvent, setLockedEvent] = useState<any>(null); // Event locked via scanner token
+  const [tokenLoading, setTokenLoading] = useState(false);
+
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    fetchEvents();
+    const token = searchParams.get('token');
+    if (token) {
+      validateScannerToken(token);
+    } else {
+      fetchEvents();
+    }
   }, []);
+
+  const validateScannerToken = async (token: string) => {
+    setTokenLoading(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/scanner/event-by-token/${token}`);
+      if (!response.ok) {
+        throw new Error('Invalid or expired scanner link');
+      }
+      const event = await response.json();
+      setLockedEvent(event);
+      setSelectedEventId(event.id);
+    } catch (err: any) {
+      setError(err.message || 'Failed to validate scanner link');
+    } finally {
+      setTokenLoading(false);
+    }
+  };
 
   const fetchEvents = async () => {
     try {
@@ -192,6 +220,14 @@ export default function ScannerPage() {
     oscillator.stop(audioContext.currentTime + 0.5);
   };
 
+  if (tokenLoading) {
+    return (
+      <div className="loading">
+        <h2>Verifying scanner link...</h2>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -203,25 +239,48 @@ export default function ScannerPage() {
         <div className="error-message">{error}</div>
       )}
 
-      <div className="event-selector">
-        <label htmlFor="event-select">
-          <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            Active Event
-          </span>
-        </label>
-        <select
-          id="event-select"
-          value={selectedEventId}
-          onChange={(e) => setSelectedEventId(e.target.value)}
-          disabled={scanning}
-        >
-          {events.map((event) => (
-            <option key={event.id} value={event.id}>
-              {event.title} - {new Date(event.dateTime).toLocaleDateString()}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Locked event banner (when accessed via scanner token link) */}
+      {lockedEvent ? (
+        <div style={{
+          background: 'rgba(46, 213, 115, 0.1)',
+          border: '1px solid rgba(46, 213, 115, 0.4)',
+          borderRadius: '10px',
+          padding: '1rem 1.5rem',
+          marginBottom: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+        }}>
+          <span style={{ fontSize: '1.5rem' }}>🔒</span>
+          <div>
+            <div style={{ fontWeight: 600, color: '#2ed573' }}>Locked to Event</div>
+            <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>{lockedEvent.title}</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              {new Date(lockedEvent.dateTime).toLocaleString()} &mdash; {lockedEvent.location}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="event-selector">
+          <label htmlFor="event-select">
+            <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              Active Event
+            </span>
+          </label>
+          <select
+            id="event-select"
+            value={selectedEventId}
+            onChange={(e) => setSelectedEventId(e.target.value)}
+            disabled={scanning}
+          >
+            {events.map((event) => (
+              <option key={event.id} value={event.id}>
+                {event.title} - {new Date(event.dateTime).toLocaleDateString()}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="scanner-container">
         <div className="video-container">

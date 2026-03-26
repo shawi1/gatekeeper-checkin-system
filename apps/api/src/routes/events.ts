@@ -189,6 +189,17 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
     // Generate invite token for private events
     const inviteToken = data.isPrivate ? randomBytes(16).toString('hex') : null;
 
+    // Generate a secure scanner token for this event
+    const scannerToken = randomBytes(32).toString('hex');
+
+    // Upgrade user to ORGANIZER role if they're currently an ATTENDEE
+    if (req.user!.role === 'ATTENDEE') {
+      await prisma.user.update({
+        where: { id: req.user!.id },
+        data: { role: 'ORGANIZER' },
+      });
+    }
+
     const event = await prisma.event.create({
       data: {
         title: data.title,
@@ -199,6 +210,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
         capacity: data.capacity || 100,
         isPrivate: data.isPrivate || false,
         inviteToken,
+        scannerToken,
         imageUrl: data.imageUrl,
         organizerId: req.user!.id,
       },

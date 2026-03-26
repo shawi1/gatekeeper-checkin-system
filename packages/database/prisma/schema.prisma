@@ -47,9 +47,10 @@ model Event {
   location    String
   price       Decimal   @default(0) @db.Decimal(10, 2) // FR-02: Paid vs free events
   capacity    Int       @default(100)
-  isPrivate   Boolean   @default(false) @map("is_private") // FR-13: Private events
-  inviteToken String?   @unique @map("invite_token") // FR-13.1: Invite link token
-  imageUrl    String?   @map("image_url")
+  isPrivate    Boolean   @default(false) @map("is_private") // FR-13: Private events
+  inviteToken  String?   @unique @map("invite_token") // FR-13.1: Invite link token
+  scannerToken String?   @unique @map("scanner_token") // Secure token for scanner app access
+  imageUrl     String?   @map("image_url")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
